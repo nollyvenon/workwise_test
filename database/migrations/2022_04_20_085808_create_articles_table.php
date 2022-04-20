@@ -19,9 +19,9 @@ class CreateArticlesTable extends Migration
             $table->text('author')->nullable();
             $table->text('body');
             $table->date('created_at');
-            $table->timestamp('expired_at')->useCurrent()->change();
+            $table->timestamp('expired_at')->useCurrent();
             $table->date('updated_at');
-            $table->date('published_at')->useCurrent()->change();
+            $table->timestamp('published_at')->useCurrent();
            // $table->timestamps();
         });
     }

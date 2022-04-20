@@ -18,7 +18,7 @@ use App\Models\Article;
 
 Route::get('articles', function() {
     //return Article::all();
-    $post = Article::where('expired_at', '>=',  Carbon::now())->get(['title', 'author', 'published_at', 'updated_at', 'created_at']);
+    $post = Article::where('expired_at', '>=',  Carbon::now())->get(['title', 'author', 'published_at', 'updated_at', 'expired_at', 'created_at']);
     
     return $post;
 });
@@ -28,20 +28,28 @@ Route::get('articles/{id}', function($id) {
 });
 
 Route::post('articles', function(Request $request) {
-    $validated = $request->validate([
+    $rules=array(
         'title' => 'required|unique:articles|max:255',
         'body' => 'required|max:4000',
-      //  'expired_at' => 'required',
-      //  'published_at' => 'required',
-    ]);
-    if ($validated){
+        'expired_at' => 'required',
+        'published_at' => 'required',
+    );
+    $messages=array(
+        'title.required' => 'Please enter a title.',
+        'body.required' => 'Please enter a body.',
+        'expired_at.required' => 'Please enter an expiration date.',
+        'published_at.required' => 'Please enter an publication date.'
+    );
+    $validator=Validator::make($request->all(),$rules,$messages);
+    if($validator->fails())
+    {
         Article::create($request->all());
         return response()->json([
             "message" => "Article added"
             ], 200);
     }else{
         return response()->json([
-            "message" => "Validation not successful"
+            "message" => "Validation was not successful"
             ], 404);
 
     }
@@ -50,10 +58,7 @@ Route::post('articles', function(Request $request) {
 
 Route::put('articles/{id}', function(Request $request, $id) {
     if (Article::where('id', $id)->exists()) {
-        $request->validate([
-            'title' => 'required|unique:articles|max:255',
-            'body' => 'required|max:4000',
-        ]);
+       
         $article = Article::findOrFail($id);
         $article->update($request->all());
 

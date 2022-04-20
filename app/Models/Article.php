@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Article extends Model
 {
     protected $table = "articles";
-    protected $fillable = ['title', 'body'];
+    protected $fillable = ['title', 'body', 'published_at', 'expired_at'];
 }
