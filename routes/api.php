@@ -29,17 +29,22 @@ Route::get('articles/{id}', function($id) {
 
 Route::post('articles', function(Request $request) {
     $request->validate([
-        'title' => 'required|unique:posts|max:255',
+        'title' => 'required|unique:articles|max:255',
         'body' => 'required|max:4000',
+       // 'expired_at' => 'required',
+      //  'published_at' => 'required',
     ]);
-    return Article::create($request->all());
+    Article::create($request->all());
+    return response()->json([
+        "message" => "Article added"
+        ], 200);
 
 });
 
 Route::put('articles/{id}', function(Request $request, $id) {
     if (Article::where('id', $id)->exists()) {
         $request->validate([
-            'title' => 'required|unique:posts|max:255',
+            'title' => 'required|unique:articles|max:255',
             'body' => 'required|max:4000',
         ]);
         $article = Article::findOrFail($id);

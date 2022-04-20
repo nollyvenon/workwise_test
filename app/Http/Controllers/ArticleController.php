@@ -20,7 +20,7 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $validator =  Validator::make($request->all(), [
-            'title' => 'required|unique:posts|max:255',
+            'title' => 'required|unique:articles|max:255',
             'body' => 'required',
         ]);
 
@@ -36,7 +36,7 @@ class ArticleController extends Controller
     public function update(Request $request, $id)
     {
         $validator =  Validator::make($request->all(), [
-            'title' => 'required|unique:posts|max:255',
+            'title' => 'required|unique:articles|max:255',
             'body' => 'required',
         ]);
 

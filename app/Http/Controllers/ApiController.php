@@ -17,7 +17,7 @@ class ApiController extends Controller
       public function createCandidate(Request $request) {
         //create a Candidate record goes here
         $request->validate([
-            'name' => 'required|unique:posts|max:255',
+            'name' => 'required|unique:candidates|max:255',
             'email' => 'required|max:200',
             'phone' => 'required|max:70',
         ]);
