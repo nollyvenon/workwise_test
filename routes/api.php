@@ -28,16 +28,23 @@ Route::get('articles/{id}', function($id) {
 });
 
 Route::post('articles', function(Request $request) {
-    $request->validate([
+    $validated = $request->validate([
         'title' => 'required|unique:articles|max:255',
         'body' => 'required|max:4000',
-       // 'expired_at' => 'required',
+      //  'expired_at' => 'required',
       //  'published_at' => 'required',
     ]);
-    Article::create($request->all());
-    return response()->json([
-        "message" => "Article added"
-        ], 200);
+    if ($validated){
+        Article::create($request->all());
+        return response()->json([
+            "message" => "Article added"
+            ], 200);
+    }else{
+        return response()->json([
+            "message" => "Validation not successful"
+            ], 404);
+
+    }
 
 });
 
