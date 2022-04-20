@@ -17,7 +17,6 @@ use App\Models\Article;
 */
 
 Route::get('articles', function() {
-    //return Article::all();
     $post = Article::where('expired_at', '>=',  Carbon::now())->get(['title', 'author', 'published_at', 'updated_at', 'expired_at', 'created_at']);
     
     return $post;
@@ -77,26 +76,35 @@ Route::put('articles/{id}', function(Request $request, $id) {
             "message" => "Validation was not successful"
             ], 404); 
     }else{
-        if (Article::where('id', $id)->exists()) {
-       
+        if(Article::where('id', $id)->exists()) {
             $article = Article::findOrFail($id);
             $article->update($request->all());
     
-            return $article;
-        } else {
             return response()->json([
-            "message" => "Article not found"
+              "message" => "Article updated"
+            ], 202);
+          } else {
+            return response()->json([
+              "message" => "Article not found"
             ], 404);
-        }
+          }
 
     }
     
 });
 
 Route::delete('articles/{id}', function($id) {
-    Article::find($id)->delete();
+    if(Article::where('id', $id)->exists()) {
+        $article = Article::find($id)->delete();
 
-    return 204;
+        return response()->json([
+          "message" => "Article deleted"
+        ], 204);
+      } else {
+        return response()->json([
+          "message" => "Article not found"
+        ], 404);
+      }
 });
 
 Route::get('candidates', 'ApiController@getAllCandidates');
