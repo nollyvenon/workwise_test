@@ -43,14 +43,14 @@ Route::post('articles', function(Request $request) {
     $validator=Validator::make($request->all(),$rules,$messages);
     if($validator->fails())
     {
+        return response()->json([
+            "message" => "Validation was not successful"
+            ], 404); 
+    }else{
         Article::create($request->all());
         return response()->json([
             "message" => "Article added"
             ], 200);
-    }else{
-        return response()->json([
-            "message" => "Validation was not successful"
-            ], 404);
 
     }
 
